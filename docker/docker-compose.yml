@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Frontend Service
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:7001
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    volumes:
+      - frontend-data:/app/data
+
+  # Backend Service
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/backend/Dockerfile
+    ports:
+      - "7001:7001"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - DB_DATABASE=my_database
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+    volumes:
+      - backend-data:/app/data
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=my_database
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD=app_password
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  frontend-data:
+  backend-data:
+  mysql-data:
