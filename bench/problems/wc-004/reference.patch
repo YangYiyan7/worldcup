@@ -1,0 +1,15 @@
+diff --git a/frontend/src/api/users.ts b/frontend/src/api/users.ts
+index d24a8a6..cbf937f 100644
+--- a/frontend/src/api/users.ts
++++ b/frontend/src/api/users.ts
+@@ -31,6 +31,10 @@ export async function fetchUsers(): Promise<User[]> {
+   }
+ 
+   const result: ApiResponse<User[]> = await response.json();
++  
++  if (!result.success) {
++    throw new Error(result.message || 'Failed to fetch users');
++  }
+ 
+   return result.data;
+ }
