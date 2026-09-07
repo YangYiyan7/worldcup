@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { fetchUsers } from '@/api/users';
 
 interface User {
@@ -10,14 +13,36 @@ interface UserListProps {
   className?: string;
 }
 
-export async function UserList({ className = '' }: UserListProps) {
-  let users: User[] = [];
-  let error: string | null = null;
+export function UserList({ className = '' }: UserListProps) {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    users = await fetchUsers();
-  } catch (err) {
-    error = err instanceof Error ? err.message : 'Failed to fetch users';
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setError(null);
+    fetchUsers()
+      .then((data) => {
+        if (active) setUsers(data);
+      })
+      .catch((err) => {
+        if (active) setError(err instanceof Error ? err.message : 'Failed to fetch users');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={`p-4 ${className}`}>
+        Loading users...
+      </div>
+    );
   }
 
   if (error) {
