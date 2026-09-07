@@ -23,13 +23,24 @@ function passPath(p, injectKey) {
   return p.startsWith(prefix) ? p.slice(prefix.length) : p;
 }
 
-function resolveFailFile(problemDir, meta) {
-  const listed = join(problemDir, 'tests', meta.fail_to_pass);
-  if (existsSync(listed)) return listed;
-  const stem = meta.fail_to_pass.split('.')[0];
-  const match = readdirSync(join(problemDir, 'tests')).find((f) => f.startsWith(stem));
-  if (!match) throw new Error(`cannot find fail test '${meta.fail_to_pass}' in ${problemDir}/tests`);
-  return join(problemDir, 'tests', match);
+function failNames(meta) {
+  return Array.isArray(meta.fail_to_pass) ? meta.fail_to_pass : [meta.fail_to_pass];
+}
+
+function resolveFailFiles(problemDir, meta) {
+  const files = new Set();
+  for (const name of failNames(meta)) {
+    const listed = join(problemDir, 'tests', name);
+    if (existsSync(listed)) {
+      files.add(listed);
+      continue;
+    }
+    const stem = name.split('.')[0];
+    const match = readdirSync(join(problemDir, 'tests')).find((f) => f.startsWith(stem));
+    if (!match) throw new Error(`cannot find fail test '${name}' in ${problemDir}/tests`);
+    files.add(join(problemDir, 'tests', match));
+  }
+  return [...files];
 }
 
 export function gradeProblem({ problemDir, meta }) {
@@ -38,18 +49,22 @@ export function gradeProblem({ problemDir, meta }) {
   const destDir = join(pkgDir, testDir);
   mkdirSync(destDir, { recursive: true });
 
-  const failFile = resolveFailFile(problemDir, meta);
-  const destTest = join(destDir, basename(failFile));
-  copyFileSync(failFile, destTest);
-
+  const copied = [];
   try {
-    const specs = [destTest, ...meta.pass_to_pass.map((p) => join(pkgDir, passPath(p, meta.inject_dir)))];
+    const specs = [];
+    for (const failFile of resolveFailFiles(problemDir, meta)) {
+      const destTest = join(destDir, basename(failFile));
+      copyFileSync(failFile, destTest);
+      copied.push(destTest);
+      specs.push(destTest);
+    }
+    for (const p of meta.pass_to_pass) specs.push(join(pkgDir, passPath(p, meta.inject_dir)));
     execFileSync('npx', ['jest', ...specs, '--runInBand'], { cwd: pkgDir, stdio: 'pipe', encoding: 'utf-8' });
     return { resolved: true, reason: null };
   } catch (err) {
     const out = String(err.stdout || '') + String(err.stderr || '');
     return { resolved: false, reason: (out || err.message).slice(0, 1000) };
   } finally {
-    rmSync(destTest, { force: true });
+    for (const f of copied) rmSync(f, { force: true });
   }
 }
