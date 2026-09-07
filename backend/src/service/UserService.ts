@@ -37,13 +37,6 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    if (updateUserDTO.email && updateUserDTO.email !== user.email) {
-      const existingUser = await this.findByEmail(updateUserDTO.email);
-      if (existingUser) {
-        throw new Error('User with this email already exists');
-      }
-    }
-
     Object.assign(user, updateUserDTO);
     return await this.userModel.save(user);
   }
