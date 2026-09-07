@@ -34,7 +34,7 @@ export class UserService {
   async update(id: number, updateUserDTO: UpdateUserDTO): Promise<User> {
     const user = await this.findById(id);
     if (!user) {
-      throw new Error('User not found');
+      return;
     }
 
     if (updateUserDTO.email && updateUserDTO.email !== user.email) {
