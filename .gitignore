@@ -45,3 +45,6 @@ frontend/out/
 
 # Backend
 backend/dist/
+
+# local scratch (SDD ledger)
+.superpowers/
