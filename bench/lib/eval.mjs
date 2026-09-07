@@ -24,10 +24,16 @@ const branch = meta.branch || `bug/${id}`;
 execSync(`git checkout -f ${branch}`, { cwd: ROOT, stdio: 'pipe' });
 
 if (patchFile) {
-  try {
-    execSync(`git apply --whitespace=nowarn "${patchFile}"`, { cwd: ROOT, stdio: 'pipe' });
-  } catch {
-    execSync(`git apply -R --whitespace=nowarn "${patchFile}"`, { cwd: ROOT, stdio: 'pipe' });
+  const content = readFileSync(patchFile, 'utf-8');
+  if (content.trim()) {
+    for (const rev of ['', '-R ']) {
+      try {
+        execSync(`git apply ${rev}--whitespace=nowarn "${patchFile}"`, { cwd: ROOT, stdio: 'pipe' });
+        break;
+      } catch {
+        // try reversed; if both fail, grade the unpatched bug branch
+      }
+    }
   }
 }
 
