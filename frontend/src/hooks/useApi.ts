@@ -39,7 +39,6 @@ export function useApi<T>(
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
         onError?.(error);
-        throw error;
       } finally {
         setLoading(false);
       }

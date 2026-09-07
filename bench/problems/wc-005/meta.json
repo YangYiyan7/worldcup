@@ -1,0 +1,9 @@
+{
+  "id": "wc-005",
+  "repo": "frontend",
+  "branch": "bug/wc-005",
+  "source_files": ["frontend/src/hooks/useApi.ts"],
+  "pass_to_pass": ["frontend/src/components/__tests__/UserList.test.tsx"],
+  "fail_to_pass": ["UseApiRethrow.test.ts"],
+  "inject_dir": "frontend-hooks"
+}
