@@ -1,0 +1,14 @@
+diff --git a/backend/src/service/UserService.ts b/backend/src/service/UserService.ts
+index d685681..dc5040a 100644
+--- a/backend/src/service/UserService.ts
++++ b/backend/src/service/UserService.ts
+@@ -10,8 +10,7 @@ export class UserService {
+   userModel: Repository<User>;
+ 
+   async findAll(): Promise<User[]> {
+-    const users = await this.userModel.find();
+-    return users.length ? users : (null as unknown as User[]);
++    return await this.userModel.find();
+   }
+ 
+   async findById(id: number): Promise<User | null> {
