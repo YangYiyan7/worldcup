@@ -31,10 +31,6 @@ export async function fetchUsers(): Promise<User[]> {
   }
 
   const result: ApiResponse<User[]> = await response.json();
-  
-  if (!result.success) {
-    throw new Error(result.message || 'Failed to fetch users');
-  }
 
   return result.data;
 }

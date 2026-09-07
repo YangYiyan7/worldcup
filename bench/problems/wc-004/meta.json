@@ -1,0 +1,9 @@
+{
+  "id": "wc-004",
+  "repo": "frontend",
+  "branch": "bug/wc-004",
+  "source_files": ["frontend/src/api/users.ts"],
+  "pass_to_pass": ["frontend/src/components/__tests__/UserList.test.tsx"],
+  "fail_to_pass": ["FetchUsersSuccess.test.ts"],
+  "inject_dir": "frontend-api"
+}
