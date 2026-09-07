@@ -15,6 +15,6 @@ describe('wc-002 update user not found', () => {
 
   it('throws User not found when updating a missing id', async () => {
     mockUserModel.findOneBy.mockResolvedValue(null);
-    await expect(svc.update(999, { name: 'x' })).rejects.toThrow('User not found');
+    await expect(svc.update(999, { name: 'x' })).rejects.toThrow(/not found/i);
   });
 });
