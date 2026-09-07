@@ -1,0 +1,13 @@
+diff --git a/backend/src/service/UserService.ts b/backend/src/service/UserService.ts
+index dc5040a..9a02cc6 100644
+--- a/backend/src/service/UserService.ts
++++ b/backend/src/service/UserService.ts
+@@ -34,7 +34,7 @@ export class UserService {
+   async update(id: number, updateUserDTO: UpdateUserDTO): Promise<User> {
+     const user = await this.findById(id);
+     if (!user) {
+-      throw new Error('User not found');
++      return;
+     }
+ 
+     if (updateUserDTO.email && updateUserDTO.email !== user.email) {

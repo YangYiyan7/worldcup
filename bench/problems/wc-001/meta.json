@@ -1,0 +1,9 @@
+{
+  "id": "wc-001",
+  "repo": "backend",
+  "branch": "bug/wc-001",
+  "source_files": ["backend/src/service/UserService.ts"],
+  "pass_to_pass": ["backend/src/service/__tests__/UserService.test.ts"],
+  "fail_to_pass": ["UpdateEmailUniqueness.test.ts"],
+  "inject_dir": "backend"
+}
