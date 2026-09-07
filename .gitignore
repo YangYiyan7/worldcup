@@ -48,3 +48,5 @@ backend/dist/
 
 # local scratch (SDD ledger)
 .superpowers/
+*.tsbuildinfo
+bench/reports/*/
