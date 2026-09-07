@@ -1,0 +1,32 @@
+{
+  "runId": "2026-09-07-05-13-27",
+  "results": [
+    {
+      "id": "wc-001",
+      "resolved": true,
+      "branch": "bug/wc-001"
+    },
+    {
+      "id": "wc-002",
+      "resolved": true,
+      "branch": "bug/wc-002"
+    },
+    {
+      "id": "wc-003",
+      "resolved": true,
+      "branch": "bug/wc-003"
+    },
+    {
+      "id": "wc-004",
+      "resolved": true,
+      "branch": "bug/wc-004"
+    },
+    {
+      "id": "wc-005",
+      "resolved": true,
+      "branch": "bug/wc-005"
+    }
+  ],
+  "resolved": 5,
+  "total": 5
+}
